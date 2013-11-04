@@ -1,0 +1,18 @@
+#!upstart
+description "Update <%= @params[:name] %> mirror"
+
+start on started <%= @params[:name] %>_mirror_shim
+stop on stopping <%= @params[:name] %>_mirror_shim
+
+task
+respawn
+
+setuid <%= @params[:user] %>
+
+env USER=<%= @params[:user] %>
+env HOME=/home/<%= @params[:user] %>
+<% if @params[:cwd] %>
+chdir <%= @params[:cwd] %>
+<% end %>
+
+exec <%= @params[:command] %>
