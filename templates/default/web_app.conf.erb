@@ -1,5 +1,7 @@
+<% if node['apache']['version'] != '2.4' %>
 NameVirtualHost *:<%= @params[:port] %>
 
+<% end %>
 <VirtualHost *:<%= @params[:port] %>>
   ServerName <%= @params[:hostname] %>
   DocumentRoot <%= @params[:docroot] %>
@@ -7,7 +9,11 @@ NameVirtualHost *:<%= @params[:port] %>
   <Directory <%= @params[:docroot] %>>
     Options Indexes FollowSymLinks
     AllowOverride FileInfo Options
+    <% if node['apache']['version'] == '2.4' %>
+    Require all granted
+    <% else %>
     Allow from all
+    <% end %>
   </Directory>
 
   ErrorLog <%= node['apache']['log_dir'] %>/<%= @params[:name] %>-error.log
